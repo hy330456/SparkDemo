@@ -1,5 +1,0 @@
-package SparkDemo
-
-class Person {
-	
-}

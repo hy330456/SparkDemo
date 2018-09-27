@@ -21,7 +21,6 @@ public class InitSparkContext {
         SparkConf conf = new SparkConf().setAppName("appName").setMaster("local[2]");
         sc = new JavaSparkContext(conf);
     }
-
     //并行化集合
     @Test
     public void parallelize() {
@@ -30,24 +29,13 @@ public class InitSparkContext {
         System.out.println(distData); //ParallelCollectionRDD[0]
 
     }
-
     //外部数据集
     @Test
     public void textFile() {
         JavaRDD<String> distFile = sc.textFile("data.txt");
         System.out.println(distFile); //MapPartitionsRDD[1]
     }
-
-    // RDD 操作 -> map
-    @Test
-    public void mapReduce() {
-        JavaRDD<String> lines = sc.textFile("data.txt");
-        JavaRDD<Integer> lineLengths = lines.map(s -> s.length());
-        int totalLength = lineLengths.reduce((a, b) -> a + b);
-        System.out.println(totalLength);
-
-    }
-
+    //持久化
     @Test
     public void persist() {
         JavaRDD<String> lines = sc.textFile("data.txt");
@@ -56,7 +44,7 @@ public class InitSparkContext {
         int totalLength = lineLengths.reduce((a, b) -> a + b);
         System.out.println(totalLength);
     }
-
+    //回调函数
     @Test
     public void callFunction() {
         JavaRDD<String> lines = sc.textFile("data.txt");
@@ -64,31 +52,22 @@ public class InitSparkContext {
         int totalLength = lineLengths.reduce(new Sum());
         System.out.println(totalLength);
     }
-
+    // RDD 操作 -> map
     @Test
-    public void callback() {
-        List<Integer> data = Arrays.asList(1, 2, 3, 4, 5);
-        int counter = 0;
-        JavaRDD<Integer> rdd = sc.parallelize(data);
-        // Wrong: Don't do this!!
-        //rdd.foreach(x -> counter += x);
-        System.out.println("Counter value: " + counter);
-    }
-
-    @Test
-    public void printRDD() {
+    public void mapReduce() {
         JavaRDD<String> lines = sc.textFile("data.txt");
-
+        JavaRDD<Integer> lineLengths = lines.map(s -> s.length());
+        int totalLength = lineLengths.reduce((a, b) -> a + b);
+        System.out.println(totalLength);
     }
-
     @Test
-    public void keyValue() {
+    public void wordCount() {
         JavaRDD<String> lines = sc.textFile("data.txt");
         JavaPairRDD<String, Integer> pairs = lines.mapToPair(s -> new Tuple2(s, 1));
         JavaPairRDD<String, Integer> counts = pairs.reduceByKey((a, b) -> a + b);
         System.out.println(counts.collect());
-
     }
+
 
 }
 

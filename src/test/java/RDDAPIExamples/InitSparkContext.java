@@ -7,6 +7,8 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.storage.StorageLevel;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import scala.Tuple2;
 
@@ -17,10 +19,6 @@ import java.util.List;
 public class InitSparkContext {
     public static JavaSparkContext sc;
 
-    static {
-        SparkConf conf = new SparkConf().setAppName("appName").setMaster("local[2]");
-        sc = new JavaSparkContext(conf);
-    }
     //并行化集合
     @Test
     public void parallelize() {
